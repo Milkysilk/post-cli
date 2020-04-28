@@ -1,0 +1,5 @@
+name: post_cli
+description: A cli tool for GatsbyJS post
+dependencies:
+  args: ^1.6.0
+  uuid: ^2.0.4
