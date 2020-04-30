@@ -9,8 +9,9 @@ Future newPost(String title, String root, String type) async {
     final now = DateTime.now();
     var year = now.year;
     var month = now.month;
+    var day = now.day;
     var uuid = Uuid().v4().replaceAll('-', '');
-    var prefix = '$root/$type/$year/${month >= 10 ? month : "0${month}" }/${uuid}';
+    var prefix = '$root/$type/$year/${month >= 10 ? month : "0${month}" }/${day >= 10 ? day : "0${day}" }/${uuid}';
     var directory = Directory(prefix);
     directory.exists().then((isThere) {
       final fileName = '$prefix/index.md';
