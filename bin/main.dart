@@ -4,14 +4,12 @@ import 'package:args/args.dart';
 
 import 'package:post_cli/post_cli.dart';
 
-const contentRoot = "content-root";
 const contentType = "content-type";
 
 ArgResults argResults;
 
-main(List<String> args) {
+main(List<String> args) async {
   final parser = ArgParser()
-    ..addOption(contentRoot, abbr: "r", help: 'The content directory of GatsbyJS site.')
     ..addOption(contentType, abbr: "t", defaultsTo: "blog", allowed: ["blog"], help: 'Type of content.');
   
   var title;
@@ -24,16 +22,14 @@ main(List<String> args) {
   }
   final type = argResults[contentType];
 
-  final envVarMap = Platform.environment;
+  var file = File('${Directory.current.path}/package.json');
 
-  // print("$title, $type, ${envVars[contentRoot]}, ${argResults[contentRoot]}");
-  
-  if (envVarMap[contentRoot] == null && argResults[contentRoot] == null) {
-    exitCode = 2;
+  if (!(await file.exists()) || (await file.readAsString()).indexOf('"gatsby":') == -1) {
+    stderr.writeln('post-cli can only be run for a gatsby site.');
+    stderr.writeln('Either the current working directory does not contain a valid package.json or \'gatsby\' is not specified as a dependency');
+    exit(2);
   }
 
-  var root = envVarMap[contentRoot] ?? argResults[contentRoot];
-
-  newPost(title, root, type);
+  newPost(title, Directory.current.path + '/content', type);
 }
 
